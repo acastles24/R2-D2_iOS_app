@@ -3,17 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		04EC7CE2FE594C9DF196F9BF /* Pods_R2_D2_R2_D2UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6792AD5E6B9B8165D43EA8A /* Pods_R2_D2_R2_D2UITests.framework */; };
 		93A9A8B1E21E9C391326C170 /* Pods_R2_D2Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E08D3DB099208F8F7C10491F /* Pods_R2_D2Tests.framework */; };
 		BF5F9598F91648412DE3A8C2 /* Pods_R2_D2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F12C50A6A4B6D522117D94BE /* Pods_R2_D2.framework */; };
+		FF17FC69238CA1D800B6A100 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF17FC68238CA1D800B6A100 /* ViewController.swift */; };
 		FF48DA69238B31030053475F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48DA68238B31030053475F /* AppDelegate.swift */; };
 		FF48DA6B238B31030053475F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48DA6A238B31030053475F /* SceneDelegate.swift */; };
-		FF48DA6D238B31030053475F /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48DA6C238B31030053475F /* FirstViewController.swift */; };
-		FF48DA6F238B31030053475F /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48DA6E238B31030053475F /* SecondViewController.swift */; };
 		FF48DA72238B31030053475F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF48DA70238B31030053475F /* Main.storyboard */; };
 		FF48DA74238B31050053475F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF48DA73238B31050053475F /* Assets.xcassets */; };
 		FF48DA77238B31050053475F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF48DA75238B31050053475F /* LaunchScreen.storyboard */; };
@@ -48,11 +47,10 @@
 		AF334EE49301BE5F590249A7 /* Pods-R2-D2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-R2-D2.debug.xcconfig"; path = "Target Support Files/Pods-R2-D2/Pods-R2-D2.debug.xcconfig"; sourceTree = "<group>"; };
 		E08D3DB099208F8F7C10491F /* Pods_R2_D2Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_R2_D2Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F12C50A6A4B6D522117D94BE /* Pods_R2_D2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_R2_D2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FF17FC68238CA1D800B6A100 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		FF48DA65238B31030053475F /* R2-D2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "R2-D2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF48DA68238B31030053475F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FF48DA6A238B31030053475F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		FF48DA6C238B31030053475F /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		FF48DA6E238B31030053475F /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		FF48DA71238B31030053475F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FF48DA73238B31050053475F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FF48DA76238B31050053475F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -103,7 +101,6 @@
 				A7A14EB3E6CCE8F703A87ED6 /* Pods-R2-D2Tests.debug.xcconfig */,
 				2653D8227D80BB988C29334F /* Pods-R2-D2Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -144,12 +141,11 @@
 			children = (
 				FF48DA68238B31030053475F /* AppDelegate.swift */,
 				FF48DA6A238B31030053475F /* SceneDelegate.swift */,
-				FF48DA6C238B31030053475F /* FirstViewController.swift */,
-				FF48DA6E238B31030053475F /* SecondViewController.swift */,
 				FF48DA70238B31030053475F /* Main.storyboard */,
 				FF48DA73238B31050053475F /* Assets.xcassets */,
 				FF48DA75238B31050053475F /* LaunchScreen.storyboard */,
 				FF48DA78238B31050053475F /* Info.plist */,
+				FF17FC68238CA1D800B6A100 /* ViewController.swift */,
 			);
 			path = "R2-D2";
 			sourceTree = "<group>";
@@ -411,8 +407,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF48DA6F238B31030053475F /* SecondViewController.swift in Sources */,
-				FF48DA6D238B31030053475F /* FirstViewController.swift in Sources */,
+				FF17FC69238CA1D800B6A100 /* ViewController.swift in Sources */,
 				FF48DA69238B31030053475F /* AppDelegate.swift in Sources */,
 				FF48DA6B238B31030053475F /* SceneDelegate.swift in Sources */,
 			);
