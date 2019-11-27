@@ -45,7 +45,7 @@ class ViewController: UIViewController {
     
     @IBAction func turn_left_right(_ sender: UISlider) {
         //todo: snap back to zero when untouched
-        mqttClient.publish("rpi/manual_back", withString: String(sender.value))
+        mqttClient.publish("rpi/manual_turn", withString: String(sender.value))
     }
     
     /*
