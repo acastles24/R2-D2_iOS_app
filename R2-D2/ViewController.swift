@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     @IBAction func mqtt_disconnect(_ sender: UIButton) {
         mqttClient.disconnect()
     }
-    
+//   tie forward and back buttons to one publish
     @IBAction func drive_forward(_ sender: UIButton) {
         if sender.isSelected{
             mqttClient.publish("rpi/manual_fwd", withString: "fwd")
