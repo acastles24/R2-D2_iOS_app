@@ -10,23 +10,27 @@ import SpriteKit
 
 class manualControlScene: SKScene {
     
-    lazy var joystick: TLAnalogJoystick = {
-        let jstick = TLAnalogJoystick(withDiameter: 100)
-        jstick.position = CGPoint(x: UIScreen.main.bounds.size.width * -0.5 + jstick.radius + 45, y: UIScreen.main.bounds.size.height * -0.5 + jstick.radius + 45)
-        return jstick
+  enum NodesZPosition: CGFloat {
+  case background, hero, joystick
+  }
+    
+    lazy var analogJoystick: TLAnalogJoystick = {
+      let js = TLAnalogJoystick(withDiameter: 100)
+      js.position = CGPoint(x: ScreenSize.width * -0.5 + js.radius + 45, y: ScreenSize.height * -0.5 + js.radius + 45)
+      js.zPosition = NodesZPosition.joystick.rawValue
+      return js
     }()
     
-    func setup(){
-        anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        setupJoystick()
-    }
-    
     override func didMove(to view: SKView) {
-        <#code#>
+      setupNodes()
+      setupJoystick()
     }
     
-    func setupJoystick(){
-        addChild(joystick)
-        
+    func setupNodes() {
+      anchorPoint = CGPoint(x: 0.5, y: 0.5)
+    }
+    
+    func setupJoystick() {
+          addChild(analogJoystick)
     }
 }
