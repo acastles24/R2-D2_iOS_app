@@ -1,5 +1,5 @@
 //
-//  JoystickScene.swift
+//  manualControlScene.swift
 //  R2-D2
 //
 //  Created by Adam Castles on 12/1/19.
@@ -7,8 +7,7 @@
 //
 
 import UIKit
-import SpriteKit
 
-class JoystickScene: SKScene {
+class manualControlScene: SKScene {
 
 }

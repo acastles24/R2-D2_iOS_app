@@ -17,7 +17,7 @@
 		FF48DA77238B31050053475F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF48DA75238B31050053475F /* LaunchScreen.storyboard */; };
 		FF48DA82238B31050053475F /* R2_D2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48DA81238B31050053475F /* R2_D2Tests.swift */; };
 		FF48DA8D238B31050053475F /* R2_D2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48DA8C238B31050053475F /* R2_D2UITests.swift */; };
-		FF86EEE3239444C600254FC5 /* JoystickScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86EEE2239444C600254FC5 /* JoystickScene.swift */; };
+		FF86EEE523944E3000254FC5 /* manualControlScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86EEE423944E3000254FC5 /* manualControlScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,7 +60,7 @@
 		FF48DA88238B31050053475F /* R2-D2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "R2-D2UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF48DA8C238B31050053475F /* R2_D2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = R2_D2UITests.swift; sourceTree = "<group>"; };
 		FF48DA8E238B31050053475F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FF86EEE2239444C600254FC5 /* JoystickScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoystickScene.swift; sourceTree = "<group>"; };
+		FF86EEE423944E3000254FC5 /* manualControlScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = manualControlScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,7 +145,7 @@
 				FF48DA75238B31050053475F /* LaunchScreen.storyboard */,
 				FF48DA78238B31050053475F /* Info.plist */,
 				FF17FC68238CA1D800B6A100 /* ViewController.swift */,
-				FF86EEE2239444C600254FC5 /* JoystickScene.swift */,
+				FF86EEE423944E3000254FC5 /* manualControlScene.swift */,
 			);
 			path = "R2-D2";
 			sourceTree = "<group>";
@@ -406,7 +406,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF86EEE3239444C600254FC5 /* JoystickScene.swift in Sources */,
+				FF86EEE523944E3000254FC5 /* manualControlScene.swift in Sources */,
 				FF17FC69238CA1D800B6A100 /* ViewController.swift in Sources */,
 				FF48DA69238B31030053475F /* AppDelegate.swift in Sources */,
 				FF48DA6B238B31030053475F /* SceneDelegate.swift in Sources */,
