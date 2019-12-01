@@ -13,11 +13,11 @@
 		FF17FC69238CA1D800B6A100 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF17FC68238CA1D800B6A100 /* ViewController.swift */; };
 		FF48DA69238B31030053475F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48DA68238B31030053475F /* AppDelegate.swift */; };
 		FF48DA6B238B31030053475F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48DA6A238B31030053475F /* SceneDelegate.swift */; };
-		FF48DA72238B31030053475F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF48DA70238B31030053475F /* Main.storyboard */; };
 		FF48DA74238B31050053475F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF48DA73238B31050053475F /* Assets.xcassets */; };
 		FF48DA77238B31050053475F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FF48DA75238B31050053475F /* LaunchScreen.storyboard */; };
 		FF48DA82238B31050053475F /* R2_D2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48DA81238B31050053475F /* R2_D2Tests.swift */; };
 		FF48DA8D238B31050053475F /* R2_D2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48DA8C238B31050053475F /* R2_D2UITests.swift */; };
+		FF86EEE3239444C600254FC5 /* JoystickScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86EEE2239444C600254FC5 /* JoystickScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,7 +51,6 @@
 		FF48DA65238B31030053475F /* R2-D2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "R2-D2.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF48DA68238B31030053475F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FF48DA6A238B31030053475F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		FF48DA71238B31030053475F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FF48DA73238B31050053475F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FF48DA76238B31050053475F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FF48DA78238B31050053475F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -61,6 +60,7 @@
 		FF48DA88238B31050053475F /* R2-D2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "R2-D2UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF48DA8C238B31050053475F /* R2_D2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = R2_D2UITests.swift; sourceTree = "<group>"; };
 		FF48DA8E238B31050053475F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FF86EEE2239444C600254FC5 /* JoystickScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoystickScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,11 +141,11 @@
 			children = (
 				FF48DA68238B31030053475F /* AppDelegate.swift */,
 				FF48DA6A238B31030053475F /* SceneDelegate.swift */,
-				FF48DA70238B31030053475F /* Main.storyboard */,
 				FF48DA73238B31050053475F /* Assets.xcassets */,
 				FF48DA75238B31050053475F /* LaunchScreen.storyboard */,
 				FF48DA78238B31050053475F /* Info.plist */,
 				FF17FC68238CA1D800B6A100 /* ViewController.swift */,
+				FF86EEE2239444C600254FC5 /* JoystickScene.swift */,
 			);
 			path = "R2-D2";
 			sourceTree = "<group>";
@@ -279,7 +279,6 @@
 			files = (
 				FF48DA77238B31050053475F /* LaunchScreen.storyboard in Resources */,
 				FF48DA74238B31050053475F /* Assets.xcassets in Resources */,
-				FF48DA72238B31030053475F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,6 +406,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF86EEE3239444C600254FC5 /* JoystickScene.swift in Sources */,
 				FF17FC69238CA1D800B6A100 /* ViewController.swift in Sources */,
 				FF48DA69238B31030053475F /* AppDelegate.swift in Sources */,
 				FF48DA6B238B31030053475F /* SceneDelegate.swift in Sources */,
@@ -445,14 +445,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		FF48DA70238B31030053475F /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FF48DA71238B31030053475F /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		FF48DA75238B31050053475F /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -593,7 +585,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "acastles.R2-D2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -612,7 +604,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "acastles.R2-D2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -7,48 +7,29 @@
 //
 
 import UIKit
+import SpriteKit
 import CocoaMQTT
 
 class ViewController: UIViewController {
-    
     let mqttClient = CocoaMQTT(clientID: "Adam's iPhone", host: "192.168.1.13", port: 1883)
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
     }
+    let scene = JoystickScene(size: self.view.bounds.size)
+    scene.backgroundColor = .white
     
-    @IBAction func mqtt_connect(_ sender: UIButton) {
-        mqttClient.connect()
-    }
-    @IBAction func mqtt_disconnect(_ sender: UIButton) {
-        mqttClient.disconnect()
-    }
-//   tie forward and back buttons to one publish
-    @IBAction func drive_forward(_ sender: UIButton) {
-        if sender.isSelected{
-            mqttClient.publish("rpi/manual_fwd", withString: "fwd")
-        }
-        else{
-            mqttClient.publish("rpi/manual_fwd", withString: "not_fwd")
-        }
-    }
-    @IBAction func drive_backwards(_ sender: UIButton) {
-        if sender.isSelected{
-            mqttClient.publish("rpi/manual_back", withString: "back")
-        }
-        else{
-            mqttClient.publish("rpi/manual_back", withString: "not_back")
-        }
-    }
-    
-    @IBAction func turn_left_right(_ sender: UISlider) {
-        //todo: snap back to zero when untouched
-        mqttClient.publish("rpi/manual_turn", withString: String(sender.value))
+    if; let skView = self.view as? SKView {
+            skView.showsFPS = true
+            skView.showsNodeCount = true
+            skView.ignoresSiblingOrder = true
+            skView.presentScene(scene)
     }
     
     /*
+     {
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -59,3 +40,4 @@ class ViewController: UIViewController {
     */
 
 }
+
