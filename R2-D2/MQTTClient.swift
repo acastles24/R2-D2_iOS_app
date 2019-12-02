@@ -12,6 +12,7 @@ class MQTTClient {
     
     init(clientName: String, hostName: String, portNum: Int) {
         self.client = CocoaMQTT(clientID: clientName, host: hostName, port: UInt16(portNum))
+        client.connect()
     }
     
     func publish(topic: String, message: String){

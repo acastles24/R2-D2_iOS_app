@@ -119,7 +119,23 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "6686D40D-D653-4444-920F-0072C35E5C13"
+            uuid = "BAD32AB4-90FE-4F88-A3FF-9127D09FF099"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "R2-D2/manualControlScene.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
+            landmarkName = "setupClient()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "842563AC-3910-4431-A19B-13349D85AFE8"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -135,32 +151,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "BAD32AB4-90FE-4F88-A3FF-9127D09FF099"
+            uuid = "17513B27-1684-4DA9-BE59-B705D2E56683"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "R2-D2/manualControlScene.swift"
+            filePath = "R2-D2/MQTTClient.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "17"
-            endingLineNumber = "17"
-            landmarkName = "setupClient()"
+            startingLineNumber = "14"
+            endingLineNumber = "14"
+            landmarkName = "init(clientName:hostName:portNum:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "842563AC-3910-4431-A19B-13349D85AFE8"
+            uuid = "D3EF0C7D-0776-47EF-B5C0-B383ED9E7680"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "R2-D2/manualControlScene.swift"
+            filePath = "R2-D2/MQTTClient.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "18"
-            endingLineNumber = "18"
-            landmarkName = "setupClient()"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
+            landmarkName = "init(clientName:hostName:portNum:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

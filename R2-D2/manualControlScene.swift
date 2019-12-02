@@ -10,10 +10,9 @@ import SpriteKit
 
 class manualControlScene: SKScene {
     
-    func setupClient() -> CocoaMQTT {
-        let client = CocoaMQTT(clientID: "iPhone", host: "192.168.1.13", port: 1883)
-        client.connect()
-        client.publish("rpi/manualControl", withString: "terst")
+    func setupClient() -> MQTTClient {
+        let client = MQTTClient(clientName: "iPhone", hostName: "192.168.1.13", portNum: 1883)
+        client.publish(topic: "rpi/manualControl", message: "terst")
         return client
     }
     
@@ -31,7 +30,7 @@ class manualControlScene: SKScene {
     override func didMove(to view: SKView) {
         setupNodes()
         let clientConnected = setupClient()
-        setupJoystick(mqttClient: clientConnected)
+        setupJoystick()
     }
     
     func setupNodes() {
@@ -39,11 +38,11 @@ class manualControlScene: SKScene {
       anchorPoint = CGPoint(x: 0.5, y: 0.5)
     }
     
-    func setupJoystick(mqttClient: CocoaMQTT) {
+    func setupJoystick() {
         addChild(joystick)
-        joystick.trackingHandler = {data in
-            mqttClient.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", data.velocity.x) + " velY = " + String(format: "%.2f", data.velocity.y) + " ang = " + String(format: "%.2f", data.angular)
-            )
+//        joystick.trackingHandler = {data in
+//            mqttClient.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", data.velocity.x) + " velY = " + String(format: "%.2f", data.velocity.y) + " ang = " + String(format: "%.2f", data.angular)
+            
         }
     }
-}
+
