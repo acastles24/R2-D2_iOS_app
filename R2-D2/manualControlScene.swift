@@ -40,9 +40,10 @@ class manualControlScene: SKScene {
     
     func setupJoystick() {
         addChild(joystick)
-//        joystick.trackingHandler = {data in
-//            mqttClient.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", data.velocity.x) + " velY = " + String(format: "%.2f", data.velocity.y) + " ang = " + String(format: "%.2f", data.angular)
+        joystick.trackingHandler = {[unowned self] data in
+            self.client.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", data.velocity.x) + " velY = " + String(format: "%.2f", data.velocity.y) + " ang = " + String(format: "%.2f", data.angular))
             
+    }
     }
     
     func createButtonConnect() {
