@@ -7,17 +7,14 @@
 //
 
 import SpriteKit
+import CocoaMQTT
 
 class manualControlScene: SKScene {
     
-    var button: SKNode! = nil
-    
-    func setupClient() -> MQTTClient {
-        let client = MQTTClient(clientName: "iPhone", hostName: "192.168.1.13", portNum: 1883)
-        client.publish(topic: "rpi/manualControl", message: "terst")
-        return client
-    }
-    
+    var buttonConnect: SKNode! = nil
+    var buttonDisconnect: SKNode! = nil
+    let client = CocoaMQTT(clientID: "iPhone", host: "192.168.1.13", port: 1883)
+       
     enum NodesZPosition: CGFloat {
     case joystick
     }
@@ -31,9 +28,9 @@ class manualControlScene: SKScene {
     
     override func didMove(to view: SKView) {
         setupNodes()
-        let clientConnected = setupClient()
         setupJoystick()
-        createButton()
+        createButtonConnect()
+        createButtonDisconnect()
     }
     
     func setupNodes() {
@@ -48,20 +45,28 @@ class manualControlScene: SKScene {
             
     }
     
-    func createButton() {
-        button = SKSpriteNode(color: SKColor.red, size: CGSize(width: 100, height: 44))
-        button.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
-        addChild(button)
+    func createButtonConnect() {
+        buttonConnect = SKSpriteNode(color: SKColor.red, size: CGSize(width: 100, height: 44))
+        buttonConnect.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        addChild(buttonConnect)
+    }
+    
+    func createButtonDisconnect() {
+        buttonDisconnect = SKSpriteNode(color: SKColor.black, size: CGSize(width: 100, height: 44))
+        buttonDisconnect.position = CGPoint(x: self.frame.midX-100, y: self.frame.midY-100)
+        addChild(buttonDisconnect)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let location = touch.location(in: self)
 
-            if button.contains(location) {
-                print("button touched")
-
-        }
+            if buttonConnect.contains(location) {
+                client.connect()
+            }
+            else if buttonDisconnect.contains(location) {
+                client.disconnect()
+            }
     }
-    }
+}
 }
