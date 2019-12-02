@@ -6,56 +6,41 @@
 //  Copyright © 2019 Adam Castles. All rights reserved.
 //
 
-import UIKit
-import CocoaMQTT
+import SpriteKit
 
-class ViewController: UIViewController {
+class ManualViewController: UIViewController {
+  
+  lazy var skView: SKView = {
+    let view = SKView()
+    //        view.translatesAutoresizingMaskIntoConstraints = false
+    view.isMultipleTouchEnabled = true
+    return view
+  }()
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    // Do any additional setup after loading the view, typically from a nib.
+    setupViews()
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
+  fileprivate func setupViews() {
+    view.addSubview(skView)
     
-    let mqttClient = CocoaMQTT(clientID: "Adam's iPhone", host: "192.168.1.13", port: 1883)
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
+    skView.frame = CGRect(x: 0.0, y: 0.0, width: ScreenSize.width, height: ScreenSize.height)
     
-    @IBAction func mqtt_connect(_ sender: UIButton) {
-        mqttClient.connect()
-    }
-    @IBAction func mqtt_disconnect(_ sender: UIButton) {
-        mqttClient.disconnect()
-    }
-//   tie forward and back buttons to one publish
-    @IBAction func drive_forward(_ sender: UIButton) {
-        if sender.isSelected{
-            mqttClient.publish("rpi/manual_fwd", withString: "fwd")
-        }
-        else{
-            mqttClient.publish("rpi/manual_fwd", withString: "not_fwd")
-        }
-    }
-    @IBAction func drive_backwards(_ sender: UIButton) {
-        if sender.isSelected{
-            mqttClient.publish("rpi/manual_back", withString: "back")
-        }
-        else{
-            mqttClient.publish("rpi/manual_back", withString: "not_back")
-        }
-    }
-    
-    @IBAction func turn_left_right(_ sender: UISlider) {
-        //todo: snap back to zero when untouched
-        mqttClient.publish("rpi/manual_turn", withString: String(sender.value))
-    }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    let scene = manualControlScene(size: CGSize(width: ScreenSize.width, height: ScreenSize.height))
+    scene.scaleMode = .aspectFill
+    skView.presentScene(scene)
+    skView.ignoresSiblingOrder = true
+    //    skView.showsFPS = true
+    //    skView.showsNodeCount = true
+    //    skView.showsPhysics = true
+  }
+  
 }
+
