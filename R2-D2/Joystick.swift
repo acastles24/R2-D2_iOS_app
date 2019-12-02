@@ -1,157 +1,74 @@
 //
-//  TLAnalogJoystick.swift
-//  tyApplyApp company
+//  AnalogStick.swift
+//  Joystick
 //
-//  Created by Dmitriy Mitrophanskiy on 2/27/19.
-//  Copyright © 2019 Dmitriy Mitrophanskiy. All rights reserved.
+//  Created by Dmitriy Mitrophanskiy on 28.09.14.
 //
-
+//
 import SpriteKit
 
-public typealias 🕹 = TLAnalogJoystick
-public typealias TLAnalogJoystickEventHandler = (TLAnalogJoystick) -> Void
-public typealias TLAnalogJoystickHandlerID = String
-public typealias TLAnalogJoystickEventHandlers = [TLAnalogJoystickHandlerID: TLAnalogJoystickEventHandler]
-
-public enum TLAnalogJoystickEventType {
-    case begin
-    case move
-    case end
-}
-
-fileprivate let getHandlerID: () -> TLAnalogJoystickHandlerID = {
-    var counter = 0
+//MARK: AnalogJoystickData
+public struct AnalogJoystickData: CustomStringConvertible {
+    var velocity = CGPoint.zero,
+    angular = CGFloat(0)
     
-    return {
-        counter += 1
-        return "sbscrbr_\(counter)"
-    }()
-}
-
-fileprivate func getDiameter(fromDiameter diameter: CGFloat, withRatio ratio: CGFloat) -> CGFloat {
-    return diameter * abs(ratio)
-}
-
-// MARK: - TLAnalogJoystickHiddenArea
-open class TLAnalogJoystickHiddenArea: SKShapeNode {
-    private var currJoystick: TLAnalogJoystick?
-    
-    var joystick: TLAnalogJoystick? {
-        get {
-            return currJoystick
-        }
-        
-        set {
-            if let currJoystick = self.currJoystick {
-                removeChildren(in: [currJoystick])
-            }
-            
-            currJoystick = newValue
-            
-            if let currJoystick = self.currJoystick {
-                isUserInteractionEnabled = true
-                cancelNode(currJoystick)
-                addChild(currJoystick)
-            } else {
-                isUserInteractionEnabled = false
-            }
-        }
+    mutating func reset() {
+        velocity = CGPoint.zero
+        angular = 0
     }
     
-    private func cancelNode(_ node: SKNode) {
-        node.isHidden = true
-    }
-    
-    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let currJoystick = self.currJoystick else {
-            return
-        }
-        
-        let firstTouch = touches.first!
-        currJoystick.position = firstTouch.location(in: self)
-        currJoystick.isHidden = false
-        currJoystick.touchesBegan(touches, with: event)
-    }
-    
-    open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let currJoystick = self.currJoystick else {
-            return
-        }
-        
-        currJoystick.touchesMoved(touches, with: event)
-    }
-    
-    open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let currJoystick = self.currJoystick else {
-            return
-        }
-        
-        currJoystick.touchesEnded(touches, with: event)
-        cancelNode(currJoystick)
-    }
-    
-    open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let currJoystick = self.currJoystick else {
-            return
-        }
-        
-        currJoystick.touchesCancelled(touches, with: event)
-        cancelNode(currJoystick)
+    public var description: String {
+        return "AnalogStickData(velocity: \(velocity), angular: \(angular))"
     }
 }
 
-//MARK: - TLAnalogJoystickComponent
-open class TLAnalogJoystickComponent: SKSpriteNode {
+//MARK: - AnalogJoystickComponent
+open class AnalogJoystickComponent: SKSpriteNode {
     private var kvoContext = UInt8(1)
-    
-    public var image: UIImage? {
+    var borderWidth = CGFloat(0) {
         didSet {
             redrawTexture()
         }
     }
     
-    public var diameter: CGFloat {
-        get {
-            return size.width
-        }
-        
-        set {
-            size = CGSize(width: newValue, height: newValue)
+    var borderColor = UIColor.black {
+        didSet {
+            redrawTexture()
         }
     }
     
-    open override var size: CGSize {
-        get {
-            return super.size
-        }
-        
-        set {
-            let maxVal = max(newValue.width, newValue.height)
-            super.size.width = maxVal
-            super.size.height = maxVal
+    var image: UIImage? {
+        didSet {
+            redrawTexture()
         }
     }
     
-    public var radius: CGFloat {
+    var diameter: CGFloat {
         get {
-            return diameter / 2
+            return max(size.width, size.height)
         }
         
-        set {
-            diameter = newValue * 2
+        set(newSize) {
+            size = CGSize(width: newSize, height: newSize)
+        }
+    }
+    
+    var radius: CGFloat {
+        get {
+            return diameter * 0.5
+        }
+        
+        set(newRadius) {
+            diameter = newRadius * 2
         }
     }
     
     //MARK: - DESIGNATED
     init(diameter: CGFloat, color: UIColor? = nil, image: UIImage? = nil) {
-        let pureColor = color ?? UIColor.black
-        let size = CGSize(width: diameter, height: diameter)
-        super.init(texture: nil, color: pureColor, size: size)
-        
+        super.init(texture: nil, color: color ?? UIColor.black, size: CGSize(width: diameter, height: diameter))
+        addObserver(self, forKeyPath: "color", options: NSKeyValueObservingOptions.old, context: &kvoContext)
         self.diameter = diameter
         self.image = image
-
-        addObserver(self, forKeyPath: "color", options: NSKeyValueObservingOptions.old, context: &kvoContext)
         redrawTexture()
     }
 
@@ -164,283 +81,177 @@ open class TLAnalogJoystickComponent: SKSpriteNode {
     }
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        
-        if keyPath == "color" {
-            redrawTexture()
-        }
+        redrawTexture()
     }
     
     private func redrawTexture() {
+        
+        guard diameter > 0 else {
+            print("Diameter should be more than zero")
+            texture = nil
+            return
+        }
+        
         let scale = UIScreen.main.scale
-        let needSize = CGSize(width: diameter, height: diameter)
-
+        let needSize = CGSize(width: self.diameter, height: self.diameter)
         UIGraphicsBeginImageContextWithOptions(needSize, false, scale)
-        let rectPath = UIBezierPath(ovalIn: CGRect(origin: .zero, size: needSize))
+        let rectPath = UIBezierPath(ovalIn: CGRect(origin: CGPoint.zero, size: needSize))
         rectPath.addClip()
         
         if let img = image {
-            img.draw(in: CGRect(origin: .zero, size: needSize), blendMode: .normal, alpha: 1)
+            img.draw(in: CGRect(origin: CGPoint.zero, size: needSize), blendMode: .normal, alpha: 1)
         } else {
             color.set()
             rectPath.fill()
         }
         
-        let textureImage = UIGraphicsGetImageFromCurrentImageContext()!
+        let needImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
-
-        texture = SKTexture(image: textureImage)
+        texture = SKTexture(image: needImage)
     }
 }
 
-//MARK: - TLAnalogJoystick
-open class TLAnalogJoystick: SKNode {
-    public var isMoveable = false
-    public let handle: TLAnalogJoystickComponent
-    public let base: TLAnalogJoystickComponent
+//MARK: - AnalogJoystickSubstrate
+open class AnalogJoystickSubstrate: AnalogJoystickComponent {
+    // coming soon...
+}
+
+//MARK: - AnalogJoystickStick
+open class AnalogJoystickStick: AnalogJoystickComponent {
+    // coming soon...
+}
+
+//MARK: - AnalogJoystick
+open class AnalogJoystick: SKNode {
+    var trackingHandler: ((AnalogJoystickData) -> ())?
+    var beginHandler: (() -> Void)?
+    var stopHandler: (() -> Void)?
+    var substrate: AnalogJoystickSubstrate!
+    var stick: AnalogJoystickStick!
+    private var tracking = false
+    private(set) var data = AnalogJoystickData()
     
-    private var pHandleRatio: CGFloat
-    private var displayLink: CADisplayLink!
-    private var hadnlers = [TLAnalogJoystickEventType: TLAnalogJoystickEventHandlers]()
-    private var handlerIDsRelEvent = [TLAnalogJoystickHandlerID: TLAnalogJoystickEventType]()
-    private(set) var tracking = false {
-        didSet {
-            guard oldValue != tracking else {
-                return
-            }
-            
-            #if swift(>=4.2)
-                let loopMode = RunLoop.Mode.common
-            #else
-                let loopMode = RunLoopMode.commonModes
-            #endif
-            
-            if tracking {
-                displayLink.add(to: .current, forMode: loopMode)
-                runEvent(.begin)
-            } else {
-                displayLink.remove(from: .current, forMode: loopMode)
-                runEvent(.end)
-                let resetAction = SKAction.move(to: .zero, duration: 0.1)
-                resetAction.timingMode = .easeOut
-                handle.run(resetAction)
-            }
-        }
-    }
-    
-    public var velocity: CGPoint {
-        let diff = handle.diameter * 0.02
-        return CGPoint(x: handle.position.x / diff, y: handle.position.y / diff)
-    }
-    
-    public var angular: CGFloat {
-        let velocity = self.velocity
-        return -atan2(velocity.x, velocity.y)
-    }
-    
-    public var disabled: Bool {
+    var disabled: Bool {
         get {
             return !isUserInteractionEnabled
         }
         
-        set {
-            isUserInteractionEnabled = !newValue
-
-            if newValue {
-                stop()
+        set(isDisabled) {
+            isUserInteractionEnabled = !isDisabled
+            
+            if isDisabled {
+                resetStick()
             }
         }
     }
     
-    public var handleRatio: CGFloat {
+    var diameter: CGFloat {
         get {
-            return pHandleRatio
+            return substrate.diameter
         }
         
-        set {
-            pHandleRatio = newValue
-            handle.diameter = getDiameter(fromDiameter: base.diameter, withRatio: newValue)
+        set(newDiameter) {
+            stick.diameter += newDiameter - diameter
+            substrate.diameter = newDiameter
         }
     }
     
-    public var diameter: CGFloat {
+    var radius: CGFloat {
         get {
-            return max(base.diameter, handle.diameter)
+            return diameter * 0.5
         }
         
-        set {
-            let diff = newValue - diameter
-            base.diameter += diff
-            handle.diameter += diff
+        set(newRadius) {
+            diameter = newRadius * 2
         }
     }
     
-    public var radius: CGFloat {
-        get {
-            return max(base.radius, handle.radius)
-        }
-        
-        set {
-            let diff = newValue - radius
-            base.radius += diff
-            handle.radius += diff
-        }
-    }
-    
-    public var baseColor: UIColor {
-        get {
-            return base.color
-        }
-        
-        set {
-            base.color = newValue
-        }
-    }
-    
-    public var handleColor: UIColor {
-        get {
-            return handle.color
-        }
-        
-        set {
-            handle.color = newValue
-        }
-    }
-    
-    public var baseImage: UIImage? {
-        get {
-            return base.image
-        }
-        
-        set {
-            base.image = newValue
-        }
-    }
-    
-    public var handleImage: UIImage? {
-        get {
-            return handle.image
-        }
-        
-        set {
-            handle.image = newValue
-        }
-    }
-
-    init(withBase base: TLAnalogJoystickComponent, handle: TLAnalogJoystickComponent) {
-        self.base = base
-        self.handle = handle
-        self.pHandleRatio = handle.diameter / base.diameter
+    init(substrate: AnalogJoystickSubstrate, stick: AnalogJoystickStick) {
         super.init()
-        
+        self.substrate = substrate
+        substrate.zPosition = 0
+        addChild(substrate)
+        self.stick = stick
+        stick.zPosition = substrate.zPosition + 1
+        addChild(stick)
         disabled = false
-        displayLink = CADisplayLink(target: self, selector: #selector(listen))
-        handle.zPosition = base.zPosition + 1
-
-        addChild(base)
-        addChild(handle)
+        let velocityLoop = CADisplayLink(target: self, selector: #selector(listen))
+        velocityLoop.add(to: RunLoop.current, forMode: RunLoop.Mode(rawValue: RunLoop.Mode.common.rawValue))
     }
     
-    deinit {
-        displayLink.invalidate()
+    convenience init(diameters: (substrate: CGFloat, stick: CGFloat?), colors: (substrate: UIColor?, stick: UIColor?)? = nil, images: (substrate: UIImage?, stick: UIImage?)? = nil) {
+        let stickDiameter = diameters.stick ?? diameters.substrate * 0.6,
+        jColors = colors ?? (substrate: nil, stick: nil),
+        jImages = images ?? (substrate: nil, stick: nil),
+        substrate = AnalogJoystickSubstrate(diameter: diameters.substrate, color: jColors.substrate, image: jImages.substrate),
+        stick = AnalogJoystickStick(diameter: stickDiameter, color: jColors.stick, image: jImages.stick)
+        self.init(substrate: substrate, stick: stick)
     }
     
-    convenience init(withDiameter diameter: CGFloat, handleRatio: CGFloat = 0.6) {
-        let base = TLAnalogJoystickComponent(diameter: diameter, color: .gray)
-        let handleDiameter = getDiameter(fromDiameter: diameter, withRatio: handleRatio)
-        let handle = TLAnalogJoystickComponent(diameter: handleDiameter, color: .black)
-        self.init(withBase: base, handle: handle)
+    convenience init(diameter: CGFloat, colors: (substrate: UIColor?, stick: UIColor?)? = nil, images: (substrate: UIImage?, stick: UIImage?)? = nil) {
+        self.init(diameters: (substrate: diameter, stick: nil), colors: colors, images: images)
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
-    private func getEventHandlers(forType type: TLAnalogJoystickEventType) -> TLAnalogJoystickEventHandlers {
-        return hadnlers[type] ?? TLAnalogJoystickEventHandlers()
-    }
-    
-    private func runEvent(_ type: TLAnalogJoystickEventType) {
-        let handlers = getEventHandlers(forType: type)
-
-        handlers.forEach { _, handler in
-            handler(self)
-        }
-    }
-    
-    @discardableResult
-    public func on(_ event: TLAnalogJoystickEventType, _ handler: @escaping TLAnalogJoystickEventHandler) -> TLAnalogJoystickHandlerID {
-        let handlerID = getHandlerID()
-        var currHandlers = getEventHandlers(forType: event)
-        currHandlers[handlerID] = handler
-        handlerIDsRelEvent[handlerID] = event
-        hadnlers[event] = currHandlers
+    @objc func listen() {
         
-        return handlerID
-    }
-    
-    public func off(handlerID: TLAnalogJoystickHandlerID) {
-        if let event = handlerIDsRelEvent[handlerID] {
-            var currHandlers = getEventHandlers(forType: event)
-            currHandlers.removeValue(forKey: handlerID)
-            hadnlers[event] = currHandlers
+        if tracking {
+            trackingHandler?(data)
         }
-        
-        handlerIDsRelEvent.removeValue(forKey: handlerID)
-    }
-    
-    public func stop() {
-        tracking = false
-    }
-    
-    @objc
-    func listen() {
-        runEvent(.move)
     }
     
     //MARK: - Overrides
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let touch = touches.first!
-
-        guard handle == atPoint(touch.location(in: self)) else {
-            return
-        }
         
-        tracking = true
+        if let touch = touches.first, stick == atPoint(touch.location(in: self)) {
+            tracking = true
+            beginHandler?()
+        }
     }
     
     open override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard tracking else {
-            return
-        }
         
-        let touch = touches.first!
-        let location = touch.location(in: self)
-        let baseRadius = base.radius
-        let distance = sqrt(pow(location.x, 2) + pow(location.y, 2))
-        let    distanceDiff = distance - baseRadius
-        
-        if distanceDiff > 0 {
-            let handlePosition = CGPoint(x: location.x / distance * baseRadius, y: location.y / distance * baseRadius)
-            handle.position = handlePosition
-
-            if isMoveable {
-                position.x += location.x - handlePosition.x
-                position.y += location.y - handlePosition.y
+        for touch: AnyObject in touches {
+            let location = touch.location(in: self)
+            
+            guard tracking else {
+                return
             }
-        } else {
-            handle.position = location
+            
+            let maxDistantion = substrate.radius,
+            realDistantion = sqrt(pow(location.x, 2) + pow(location.y, 2)),
+            needPosition = realDistantion <= maxDistantion ? CGPoint(x: location.x, y: location.y) : CGPoint(x: location.x / realDistantion * maxDistantion, y: location.y / realDistantion * maxDistantion)
+            stick.position = needPosition
+            data = AnalogJoystickData(velocity: needPosition, angular: -atan2(needPosition.x, needPosition.y))
         }
     }
     
     open override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tracking = false
+        resetStick()
     }
     
     open override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        tracking = false
+        resetStick()
     }
-
+    
+    // CustomStringConvertible protocol
     open override var description: String {
-        return "TLAnalogJoystick (position: \(position), velocity: \(velocity), angular: \(angular)"
+        return "AnalogJoystick(data: \(data), position: \(position))"
+    }
+    
+    // private methods
+    private func resetStick() {
+        tracking = false
+        let moveToBack = SKAction.move(to: CGPoint.zero, duration: TimeInterval(0.1))
+        moveToBack.timingMode = .easeOut
+        stick.run(moveToBack)
+        data.reset()
+        stopHandler?();
     }
 }
+
+typealias 🕹 = AnalogJoystick
+

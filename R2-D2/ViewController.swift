@@ -6,9 +6,7 @@
 //  Copyright © 2019 Adam Castles. All rights reserved.
 //
 
-import UIKit
 import SpriteKit
-import CocoaMQTT
 
 class ManualViewController: UIViewController {
   
