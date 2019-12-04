@@ -28,9 +28,9 @@ class manualControlScene: SKScene {
     
     override func didMove(to view: SKView) {
         setupNodes()
-        setupJoystick()
         createButtonConnect()
         createButtonDisconnect()
+        setupJoystick()
     }
     
     func setupNodes() {
@@ -39,11 +39,14 @@ class manualControlScene: SKScene {
     }
     
     func setupJoystick() {
+//        velocity: -50 to 50,
         addChild(joystick)
         joystick.trackingHandler = {[unowned self] data in
             self.client.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", data.velocity.x) + " velY = " + String(format: "%.2f", data.velocity.y) + " ang = " + String(format: "%.2f", data.angular))
-            
-    }
+        }
+        joystick.stopHandler = {[unowned self] in
+            self.client.publish("rpi/manualControl", withString: "velX = 0 velY = 0 ang = 0")
+        }
     }
     
     func createButtonConnect() {

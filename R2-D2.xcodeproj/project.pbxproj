@@ -19,7 +19,6 @@
 		FF86EEEB2394531D00254FC5 /* manualControlScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86EEE423944E3000254FC5 /* manualControlScene.swift */; };
 		FF86EEEC2394532000254FC5 /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86EEE8239452A500254FC5 /* Joystick.swift */; };
 		FF86EEEE239482D700254FC5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86EEED239482D700254FC5 /* Extensions.swift */; };
-		FF86EEF0239495D600254FC5 /* MQTTClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF86EEEF239495D600254FC5 /* MQTTClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,7 +63,6 @@
 		FF86EEE423944E3000254FC5 /* manualControlScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = manualControlScene.swift; sourceTree = "<group>"; };
 		FF86EEE8239452A500254FC5 /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		FF86EEED239482D700254FC5 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		FF86EEEF239495D600254FC5 /* MQTTClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MQTTClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,7 +149,6 @@
 				FF86EEE423944E3000254FC5 /* manualControlScene.swift */,
 				FF86EEE8239452A500254FC5 /* Joystick.swift */,
 				FF86EEED239482D700254FC5 /* Extensions.swift */,
-				FF86EEEF239495D600254FC5 /* MQTTClient.swift */,
 			);
 			path = "R2-D2";
 			sourceTree = "<group>";
@@ -412,7 +409,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF86EEF0239495D600254FC5 /* MQTTClient.swift in Sources */,
 				FF17FC69238CA1D800B6A100 /* ViewController.swift in Sources */,
 				FF86EEEE239482D700254FC5 /* Extensions.swift in Sources */,
 				FF48DA69238B31030053475F /* AppDelegate.swift in Sources */,
