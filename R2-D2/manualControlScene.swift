@@ -44,8 +44,8 @@ class manualControlScene: SKScene {
         joystick.trackingHandler = {[unowned self] data in
             self.client.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", data.velocity.x) + " velY = " + String(format: "%.2f", data.velocity.y) + " ang = " + String(format: "%.2f", data.angular))
         }
-        joystick.stopHandler = {[unowned self] in
-            self.client.publish("rpi/manualControl", withString: "velX = 0 velY = 0 ang = 0")
+        joystick.stopHandler = {[unowned self] data in
+            self.client.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", data.velocity.x) + " velY = " + String(format: "%.2f", data.velocity.y) + " ang = " + String(format: "%.2f", data.angular))
         }
     }
     

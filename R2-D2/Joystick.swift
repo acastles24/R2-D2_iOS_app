@@ -14,7 +14,7 @@ public struct AnalogJoystickData: CustomStringConvertible {
     
     mutating func reset() {
         velocity = CGPoint.zero
-        angular = 0
+//        angular = 0
     }
     
     public var description: String {
@@ -125,7 +125,7 @@ open class AnalogJoystickStick: AnalogJoystickComponent {
 open class AnalogJoystick: SKNode {
     var trackingHandler: ((AnalogJoystickData) -> ())?
     var beginHandler: (() -> Void)?
-    var stopHandler: (() -> Void)?
+    var stopHandler: ((AnalogJoystickData) -> ())?
     var substrate: AnalogJoystickSubstrate!
     var stick: AnalogJoystickStick!
     private var tracking = false
@@ -249,7 +249,7 @@ open class AnalogJoystick: SKNode {
         moveToBack.timingMode = .easeOut
         stick.run(moveToBack)
         data.reset()
-        stopHandler?();
+        stopHandler?(data);
     }
 }
 
