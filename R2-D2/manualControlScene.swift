@@ -13,6 +13,8 @@ class manualControlScene: SKScene {
     
     var buttonConnect: SKNode! = nil
     var buttonDisconnect: SKNode! = nil
+    var buttonManualDrive: SKNode! = nil
+    let joystick_rad = 75
     let client = CocoaMQTT(clientID: "iPhone", host: "192.168.1.13", port: 1883)
        
     enum NodesZPosition: CGFloat {
@@ -20,7 +22,7 @@ class manualControlScene: SKScene {
     }
         
     lazy var joystick: AnalogJoystick = {
-      let js = AnalogJoystick(diameter: 100, colors: (UIColor.red, UIColor.yellow))
+        let js = AnalogJoystick(diameter: CGFloat(joystick_rad * 2), colors: (UIColor.red, UIColor.yellow))
       js.position = CGPoint(x: ScreenSize.width * -0.5 + js.radius + 45, y: ScreenSize.height * -0.5 + js.radius + 45)
       js.zPosition = NodesZPosition.joystick.rawValue
       return js
@@ -30,6 +32,7 @@ class manualControlScene: SKScene {
         setupNodes()
         createButtonConnect()
         createButtonDisconnect()
+        createButtonManualDrive()
         setupJoystick()
     }
     
@@ -61,6 +64,12 @@ class manualControlScene: SKScene {
         addChild(buttonDisconnect)
     }
     
+    func createButtonManualDrive() {
+        buttonManualDrive = SKSpriteNode(color: SKColor.green, size: CGSize(width: 100, height: 44))
+        buttonManualDrive.position = CGPoint(x: self.frame.midX+100, y: self.frame.midY+100)
+        addChild(buttonManualDrive)
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let location = touch.location(in: self)
@@ -70,6 +79,10 @@ class manualControlScene: SKScene {
             }
             else if buttonDisconnect.contains(location) {
                 client.disconnect()
+            }
+            
+            else if buttonManualDrive.contains(location) {
+                client.publish("rpi/chooseDriveMethod", withString: "Manual")
             }
     }
 }
