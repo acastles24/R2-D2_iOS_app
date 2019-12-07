@@ -14,7 +14,8 @@ class manualControlScene: SKScene {
     var buttonConnect: SKNode! = nil
     var buttonDisconnect: SKNode! = nil
     var buttonManualDrive: SKNode! = nil
-    let joystick_rad = 75
+    var current_drive_method: String? = nil
+    let joystick_rad: CGFloat = 75
     let client = CocoaMQTT(clientID: "iPhone", host: "192.168.1.13", port: 1883)
        
     enum NodesZPosition: CGFloat {
@@ -42,13 +43,12 @@ class manualControlScene: SKScene {
     }
     
     func setupJoystick() {
-//        velocity: -50 to 50,
         addChild(joystick)
         joystick.trackingHandler = {[unowned self] data in
-            self.client.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", data.velocity.x) + " velY = " + String(format: "%.2f", data.velocity.y) + " ang = " + String(format: "%.2f", data.angular))
+            self.client.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.x, mag: self.joystick_rad)) + " velY = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.y, mag: self.joystick_rad)) + " ang = " + String(format: "%.2f", data.angular))
         }
         joystick.stopHandler = {[unowned self] data in
-            self.client.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", data.velocity.x) + " velY = " + String(format: "%.2f", data.velocity.y) + " ang = " + String(format: "%.2f", data.angular))
+            self.client.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.x, mag: self.joystick_rad)) + " velY = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.y, mag: self.joystick_rad)) + " ang = " + String(format: "%.2f", data.angular))
         }
     }
     
@@ -70,6 +70,10 @@ class manualControlScene: SKScene {
         addChild(buttonManualDrive)
     }
     
+    func normalizeJoystickVelocity(vel: CGFloat, mag: CGFloat) -> CGFloat{
+        return vel/mag
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let location = touch.location(in: self)
@@ -82,7 +86,7 @@ class manualControlScene: SKScene {
             }
             
             else if buttonManualDrive.contains(location) {
-                client.publish("rpi/chooseDriveMethod", withString: "Manual")
+                current_drive_method = "Manual"
             }
     }
 }
