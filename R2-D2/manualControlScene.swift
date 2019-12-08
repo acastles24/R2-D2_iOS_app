@@ -1,8 +1,8 @@
 //
 //  manualControlScene.swift
-//  R2-D2
-//
+//  R2-D2//
 //  Created by Adam Castles on 12/1/19.
+
 //  Copyright © 2019 Adam Castles. All rights reserved.
 //
 
@@ -11,12 +11,19 @@ import CocoaMQTT
 
 class manualControlScene: SKScene {
     
-    var buttonConnect: SKNode! = nil
-    var buttonDisconnect: SKNode! = nil
-    var buttonManualDrive: SKNode! = nil
+    var buttonConnect: SKSpriteNode! = nil
+    var buttonConnectLabel: SKLabelNode! = nil
+    var buttonDisconnect: SKSpriteNode! = nil
+    var buttonManualDrive: SKSpriteNode! = nil
     var current_drive_method: String? = nil
     let joystick_rad: CGFloat = 75
-    let client = CocoaMQTT(clientID: "iPhone", host: "192.168.1.13", port: 1883)
+    struct mqttConnection {
+        let client = CocoaMQTT(clientID: "iPhone", host: "192.168.1.13", port: 1883)
+        var connected_state = false
+    }
+    
+    var connection = mqttConnection()
+    
        
     enum NodesZPosition: CGFloat {
     case joystick
@@ -55,7 +62,12 @@ class manualControlScene: SKScene {
     func createButtonConnect() {
         buttonConnect = SKSpriteNode(color: SKColor.red, size: CGSize(width: 100, height: 44))
         buttonConnect.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        buttonConnectLabel = SKLabelNode(text: "Connect")
+        buttonConnectLabel.fontSize = 30
+        buttonConnectLabel.fontColor = SKColor.white
+        buttonConnectLabel.position = CGPoint(x: buttonConnect.frame.midX, y: buttonConnect.frame.midY)
         addChild(buttonConnect)
+        addChild(buttonConnectLabel)
     }
     
     func createButtonDisconnect() {
@@ -78,11 +90,17 @@ class manualControlScene: SKScene {
         for touch in touches {
             let location = touch.location(in: self)
 
-            if buttonConnect.contains(location) {
-                client.connect()
+            if buttonConnect.contains(location) && !connection.connected_state {
+                connection.client.connect()
+                connection.connected_state = true
+                buttonConnect.color = SKColor.gray
+                buttonManualDrive.color = SKColor.orange
             }
             else if buttonDisconnect.contains(location) {
-                client.disconnect()
+                connection.client.disconnect()
+                connection.connected_state = false
+                buttonConnect.color = SKColor.green
+                buttonManualDrive.color = SKColor.gray
             }
             
             else if buttonManualDrive.contains(location) {
