@@ -12,11 +12,11 @@ import CocoaMQTT
 class manualControlScene: SKScene {
     
 //    todo: scale
-    var buttonConnect: SKSpriteNode! = nil
+    var buttonConnect: ButtonClass! = nil
     var buttonConnectLabel: SKLabelNode! = nil
-    var buttonDisconnect: SKSpriteNode! = nil
+    var buttonDisconnect: ButtonClass! = nil
     var buttonDisconnectLabel: SKLabelNode! = nil
-    var buttonManualDrive: SKSpriteNode! = nil
+    var buttonManualDrive: ButtonClass! = nil
     var buttonManualDriveLabel: SKLabelNode! = nil
     var current_drive_method: String? = nil
     let joystick_rad: CGFloat = 75
@@ -65,9 +65,18 @@ class manualControlScene: SKScene {
     
     class ButtonClass:SKSpriteNode{
         var activeColorInit:SKColor?
-        convenience init(activeColor: SKColor){
-            self.init(color: SKColor.darkGray, size: CGSize(width: 100, height: 44))
+        convenience init(activeColor: SKColor, position: CGPoint){
+            self.init(texture: nil, color: SKColor.darkGray, size: CGSize(width: 100, height: 44))
+            self.position = position
             activeColorInit = activeColor
+        }
+        
+        override init(texture: SKTexture!, color: SKColor, size: CGSize){
+            super.init(texture: texture, color: color, size: size)
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
         }
         
         var isActive: Bool? {
@@ -83,8 +92,8 @@ class manualControlScene: SKScene {
     }
     
     func createButtonConnect() {
-        buttonConnect = SKSpriteNode(color: SKColor.green, size: CGSize(width: 100, height: 44))
-        buttonConnect.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        buttonConnect = ButtonClass(activeColor: SKColor.green, position: CGPoint(x: self.frame.midX, y: self.frame.midY))
+        buttonConnect.isActive = true
         buttonConnectLabel = SKLabelNode(text: "Connect")
         buttonConnectLabel.fontSize = 30
         buttonConnectLabel.fontColor = SKColor.black
@@ -94,8 +103,7 @@ class manualControlScene: SKScene {
     }
     
     func createButtonDisconnect() {
-        buttonDisconnect = SKSpriteNode(color: SKColor.darkGray, size: CGSize(width: 100, height: 44))
-        buttonDisconnect.position = CGPoint(x: self.frame.midX-100, y: self.frame.midY-100)
+        buttonDisconnect = ButtonClass(activeColor: SKColor.red, position: CGPoint(x: self.frame.midX-100, y: self.frame.midY-100))
         buttonDisconnectLabel = SKLabelNode(text: "Disconnect")
         buttonDisconnectLabel.fontSize = 30
         buttonDisconnectLabel.fontColor = SKColor.black
@@ -105,8 +113,7 @@ class manualControlScene: SKScene {
     }
     
     func createButtonManualDrive() {
-        buttonManualDrive = SKSpriteNode(color: SKColor.darkGray, size: CGSize(width: 100, height: 44))
-        buttonManualDrive.position = CGPoint(x: self.frame.midX+100, y: self.frame.midY+100)
+        buttonManualDrive = ButtonClass(activeColor: SKColor.orange, position: CGPoint(x: self.frame.midX+100, y: self.frame.midY+100))
         buttonManualDriveLabel = SKLabelNode(text: "Manual")
         buttonManualDriveLabel.fontSize = 30
         buttonManualDriveLabel.fontColor = SKColor.black
@@ -127,16 +134,17 @@ class manualControlScene: SKScene {
             if buttonConnect.contains(location) && !connection.connected_state {
                 connection.client.connect()
                 connection.connected_state = true
-                buttonConnect.color = SKColor.gray
-                buttonDisconnect.color = SKColor.red
-                buttonManualDrive.color = SKColor.orange
+                buttonConnect.isActive = false
+                buttonDisconnect.isActive = true
+                buttonManualDrive.isActive = true
             }
             else if buttonDisconnect.contains(location) && connection.connected_state{
                 connection.client.disconnect()
                 connection.connected_state = false
-                buttonConnect.color = SKColor.green
-                buttonDisconnect.color = SKColor.gray
-                buttonManualDrive.color = SKColor.gray
+                buttonConnect.isActive = true
+                buttonDisconnect.isActive = false
+                buttonManualDrive.isActive = false
+                
             }
             
             else if buttonManualDrive.contains(location) {
