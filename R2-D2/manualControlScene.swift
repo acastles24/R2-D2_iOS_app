@@ -11,6 +11,7 @@ import CocoaMQTT
 
 class manualControlScene: SKScene {
     
+//    todo: scale
     var buttonConnect: SKSpriteNode! = nil
     var buttonConnectLabel: SKLabelNode! = nil
     var buttonDisconnect: SKSpriteNode! = nil
@@ -19,8 +20,9 @@ class manualControlScene: SKScene {
     var buttonManualDriveLabel: SKLabelNode! = nil
     var current_drive_method: String? = nil
     let joystick_rad: CGFloat = 75
+    
     struct mqttConnection {
-        let client = CocoaMQTT(clientID: "iPhone", host: "192.168.1.13", port: 1883)
+        let client = CocoaMQTT(clientID: "Adam's iPhone", host: "192.168.1.13", port: 1883)
         var connected_state = false
     }
     
@@ -33,7 +35,7 @@ class manualControlScene: SKScene {
         
     lazy var joystick: AnalogJoystick = {
         let js = AnalogJoystick(diameter: CGFloat(joystick_rad * 2), colors: (UIColor.white, UIColor.blue))
-      js.position = CGPoint(x: ScreenSize.width * -0.5 + js.radius + 45, y: ScreenSize.height * -0.5 + js.radius + 45)
+        js.position = CGPoint(x: 0, y: ScreenSize.height * -0.5 + js.radius + 45)
       js.zPosition = NodesZPosition.joystick.rawValue
       return js
     }()
@@ -58,6 +60,25 @@ class manualControlScene: SKScene {
         }
         joystick.stopHandler = {[unowned self] data in
             self.connection.client.publish("rpi/manualControl", withString: "velX = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.x, mag: self.joystick_rad)) + " velY = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.y, mag: self.joystick_rad)) + " ang = " + String(format: "%.2f", data.angular))
+        }
+    }
+    
+    class ButtonClass:SKSpriteNode{
+        var activeColorInit:SKColor?
+        convenience init(activeColor: SKColor){
+            self.init(color: SKColor.darkGray, size: CGSize(width: 100, height: 44))
+            activeColorInit = activeColor
+        }
+        
+        var isActive: Bool? {
+            willSet(newValue){
+                if newValue == true{
+                    self.color = activeColorInit!
+                }
+                else{
+                    self.color = SKColor.darkGray
+                }
+            }
         }
     }
     
@@ -110,10 +131,11 @@ class manualControlScene: SKScene {
                 buttonDisconnect.color = SKColor.red
                 buttonManualDrive.color = SKColor.orange
             }
-            else if buttonDisconnect.contains(location) {
+            else if buttonDisconnect.contains(location) && connection.connected_state{
                 connection.client.disconnect()
                 connection.connected_state = false
                 buttonConnect.color = SKColor.green
+                buttonDisconnect.color = SKColor.gray
                 buttonManualDrive.color = SKColor.gray
             }
             
