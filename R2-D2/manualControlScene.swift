@@ -65,10 +65,12 @@ class manualControlScene: SKScene {
     
     class GeneralButtonClass:SKSpriteNode{
         var activeColorInit:SKColor?
+        var highlightColorInit:SKColor?
         convenience init(activeColor: SKColor, position: CGPoint){
             self.init(texture: nil, color: SKColor.darkGray, size: CGSize(width: 100, height: 44))
             self.position = position
             activeColorInit = activeColor
+            highlightColorInit = activeColor.lighterColor
         }
         
         override init(texture: SKTexture!, color: SKColor, size: CGSize){
@@ -79,10 +81,13 @@ class manualControlScene: SKScene {
             fatalError("init(coder:) has not been implemented")
         }
         
-        var isActive: Bool? {
+        var activeState: Int? {
             willSet(newValue){
-                if newValue == true{
+                if newValue == 2{
                     self.color = activeColorInit!
+                }
+                else if newValue == 1{
+                    self.color = highlightColorInit!
                 }
                 else{
                     self.color = SKColor.darkGray
@@ -93,12 +98,15 @@ class manualControlScene: SKScene {
         
     class DriveMethodButtonClass:SKSpriteNode{
         var activeColorInit:SKColor?
+        var highlightColorInit:SKColor?
         var mqttTopic:String?
         var mqttMessage:String?
         var clientFound:CocoaMQTT?
         convenience init(activeColor: SKColor, position: CGPoint, client: CocoaMQTT, topic: String, message: String){
             self.init(texture: nil, color: SKColor.darkGray, size: CGSize(width: 100, height: 44))
             self.position = position
+            activeColorInit = activeColor
+            highlightColorInit = activeColor.lighterColor
             mqttTopic = topic
             mqttMessage = message
             clientFound = client
@@ -112,12 +120,13 @@ class manualControlScene: SKScene {
             fatalError("init(coder:) has not been implemented")
         }
         
-        var isActive: Bool? {
+        var activeState: Int? {
             willSet(newValue){
-                if newValue == true{
+                if newValue == 2{
                     self.color = activeColorInit!
-                    clientFound?.subscribe(mqttTopic!)
-                    clientFound?.publish(mqttTopic!, withString: mqttMessage!)
+                }
+                else if newValue == 1{
+                    self.color = highlightColorInit!
                 }
                 else{
                     self.color = SKColor.darkGray
@@ -139,7 +148,7 @@ class manualControlScene: SKScene {
     
     func createButtonConnect() {
         buttonConnect = GeneralButtonClass(activeColor: SKColor.green, position: CGPoint(x: self.frame.midX, y: self.frame.midY))
-        buttonConnect.isActive = true
+        buttonConnect.activeState = 1
         buttonConnectLabel = ButtonLabel(text: "Connect", fontSize: 30, position: CGPoint(x: buttonConnect.frame.midX, y: buttonConnect.frame.midY), fontColor: SKColor.black, fontNamed: "Chalkduster")
         addChild(buttonConnect)
         addChild(buttonConnectLabel)
@@ -169,23 +178,31 @@ class manualControlScene: SKScene {
             let location = touch.location(in: self)
 
             if buttonConnect.contains(location) && !connection.connected_state {
+//                todo: wait?
                 connection.client.connect()
                 connection.connected_state = true
-                buttonConnect.isActive = false
-                buttonDisconnect.isActive = true
-                buttonManualDrive.isActive = true
+                buttonConnect.activeState = 0
+                buttonDisconnect.activeState = 2
+                buttonManualDrive.activeState = 1
             }
             else if buttonDisconnect.contains(location) && connection.connected_state{
                 connection.client.disconnect()
                 connection.connected_state = false
-                buttonConnect.isActive = true
-                buttonDisconnect.isActive = false
-                buttonManualDrive.isActive = false
+                buttonConnect.activeState = 2
+                buttonDisconnect.activeState = 0
+                buttonManualDrive.activeState = 0
                 current_drive_method = "None"
             }
             
-            else if buttonManualDrive.contains(location) {
-                current_drive_method = "Manual"
+            else if buttonManualDrive.contains(location){
+                if current_drive_method == "None"{
+                    current_drive_method = "Manual"
+                    buttonManualDrive.activeState = 2
+                }
+                else if current_drive_method == "Manual"{
+                    current_drive_method = "None"
+                    buttonManualDrive.activeState = 1
+                }
             }
     }
 }

@@ -35,3 +35,25 @@ public extension SKSpriteNode {
   }
   
 }
+
+
+extension SKColor {
+//    Credit to Aviel Gross:
+//    https://stackoverflow.com/questions/11598043/get-slightly-lighter-and-darker-color-from-uicolor
+    var lighterColor: SKColor {
+        return lighterColor(removeSaturation: 0.5, resultAlpha: -1)
+    }
+
+    func lighterColor(removeSaturation val: CGFloat, resultAlpha alpha: CGFloat) -> UIColor {
+        var h: CGFloat = 0, s: CGFloat = 0
+        var b: CGFloat = 0, a: CGFloat = 0
+
+        guard getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+            else {return self}
+
+        return SKColor(hue: h,
+                       saturation: max(s - val, 0.0),
+                       brightness: b,
+                       alpha: alpha == -1 ? a : alpha)
+    }
+}
