@@ -18,7 +18,7 @@ class manualControlScene: SKScene {
     var buttonDisconnectLabel: SKLabelNode! = nil
     var buttonManualDrive: ButtonClass! = nil
     var buttonManualDriveLabel: SKLabelNode! = nil
-    var current_drive_method: String? = nil
+    var current_drive_method: String = "None"
     let joystick_rad: CGFloat = 75
     
     struct mqttConnection {
@@ -45,7 +45,7 @@ class manualControlScene: SKScene {
         createButtonConnect()
         createButtonDisconnect()
         createButtonManualDrive()
-        setupJoystick()
+        setupJoystick(joystick: joystick)
     }
     
     func setupNodes() {
@@ -53,7 +53,7 @@ class manualControlScene: SKScene {
       anchorPoint = CGPoint(x: 0.5, y: 0.5)
     }
     
-    func setupJoystick() {
+    func setupJoystick(joystick: AnalogJoystick) {
         addChild(joystick)
         joystick.trackingHandler = {[unowned self] data in
             self.connection.client.publish("rpi/manualControl", withString: "velX = " +  String(format: "%.2f",self.normalizeJoystickVelocity(vel: data.velocity.x, mag: self.joystick_rad)) + " velY = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.y, mag: self.joystick_rad)) + " ang = " + String(format: "%.2f", data.angular))
@@ -64,10 +64,12 @@ class manualControlScene: SKScene {
     }
     
     class ButtonClass:SKSpriteNode{
-        var activeColorInit:SKColor?
-        convenience init(activeColor: SKColor, position: CGPoint){
+        var activeColorInit:SKColor
+        var clientFound:CocoaMQTT
+        convenience init(activeColor: SKColor, position: CGPoint, client: CocoaMQTT){
             self.init(texture: nil, color: SKColor.darkGray, size: CGSize(width: 100, height: 44))
             self.position = position
+            clientFound = client
             activeColorInit = activeColor
         }
         
@@ -79,10 +81,18 @@ class manualControlScene: SKScene {
             fatalError("init(coder:) has not been implemented")
         }
         
+        func activeAction(){
+            preconditionFailure("Implement activeAction method.")
+        }
+        
+        func inactiveAction(){
+            preconditionFailure("Implement inactiveAction method.")
+        }
+        
         var isActive: Bool? {
             willSet(newValue){
                 if newValue == true{
-                    self.color = activeColorInit!
+                    self.color = activeColorInit
                 }
                 else{
                     self.color = SKColor.darkGray
@@ -91,8 +101,10 @@ class manualControlScene: SKScene {
         }
     }
     
+    
+    
     func createButtonConnect() {
-        buttonConnect = ButtonClass(activeColor: SKColor.green, position: CGPoint(x: self.frame.midX, y: self.frame.midY))
+        buttonConnect = ButtonClass(activeColor: SKColor.green, position: CGPoint(x: self.frame.midX, y: self.frame.midY), client: connection.client)
         buttonConnect.isActive = true
         buttonConnectLabel = SKLabelNode(text: "Connect")
         buttonConnectLabel.fontSize = 30
@@ -103,7 +115,7 @@ class manualControlScene: SKScene {
     }
     
     func createButtonDisconnect() {
-        buttonDisconnect = ButtonClass(activeColor: SKColor.red, position: CGPoint(x: self.frame.midX-100, y: self.frame.midY-100))
+        buttonDisconnect = ButtonClass(activeColor: SKColor.red, position: CGPoint(x: self.frame.midX-100, y: self.frame.midY-100), client: connection.client)
         buttonDisconnectLabel = SKLabelNode(text: "Disconnect")
         buttonDisconnectLabel.fontSize = 30
         buttonDisconnectLabel.fontColor = SKColor.black
@@ -113,7 +125,7 @@ class manualControlScene: SKScene {
     }
     
     func createButtonManualDrive() {
-        buttonManualDrive = ButtonClass(activeColor: SKColor.orange, position: CGPoint(x: self.frame.midX+100, y: self.frame.midY+100))
+        buttonManualDrive = ButtonClass(activeColor: SKColor.orange, position: CGPoint(x: self.frame.midX+100, y: self.frame.midY+100), client: connection.client)
         buttonManualDriveLabel = SKLabelNode(text: "Manual")
         buttonManualDriveLabel.fontSize = 30
         buttonManualDriveLabel.fontColor = SKColor.black
@@ -144,10 +156,11 @@ class manualControlScene: SKScene {
                 buttonConnect.isActive = true
                 buttonDisconnect.isActive = false
                 buttonManualDrive.isActive = false
-                
+                current_drive_method = "None"
             }
             
             else if buttonManualDrive.contains(location) {
+                
                 current_drive_method = "Manual"
             }
     }
