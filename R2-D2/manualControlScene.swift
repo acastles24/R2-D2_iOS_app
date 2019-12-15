@@ -161,11 +161,15 @@ class manualControlScene: SKScene {
             if buttonConnect.contains(location) && connection.connState == .initial {
 //                todo: wait?
                 connection.connect()
-                buttonConnect.activeState = 0
-                buttonDisconnect.activeState = 2
-                buttonManualDrive.activeState = 1
+//                state is .connecting for some reason
+                if connection.connState == .connected ||  connection.connState == .connecting{
+                    buttonConnect.activeState = 0
+                    buttonDisconnect.activeState = 2
+                    buttonManualDrive.activeState = 1
+                }
+                    
             }
-            else if buttonDisconnect.contains(location) && connection.connState == .connected{
+            else if buttonDisconnect.contains(location) && (connection.connState == .connected ||  connection.connState == .connecting){
                 connection.disconnect()
                 buttonConnect.activeState = 2
                 buttonDisconnect.activeState = 0
@@ -174,7 +178,7 @@ class manualControlScene: SKScene {
             }
             
             else if buttonManualDrive.contains(location){
-                if current_drive_method == "None" && connection.connState == .connected{
+                if current_drive_method == "None" && (connection.connState == .connected ||  connection.connState == .connecting){
                     current_drive_method = "Manual"
                     buttonManualDrive.activeState = 2
                 }
