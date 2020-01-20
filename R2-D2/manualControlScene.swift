@@ -55,7 +55,6 @@ class manualControlScene: SKScene {
     }
     
     func setupJoystick(joystick: AnalogJoystick) {
-        addChild(joystick)
         joystick.trackingHandler = {[unowned self] data in
             self.connection.publish(self.topics.manualDriveTopic, withString: "velX = " +  String(format: "%.2f",self.normalizeJoystickVelocity(vel: data.velocity.x, mag: self.joystick_rad)) + " velY = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.y, mag: self.joystick_rad)) + " ang = " + String(format: "%.2f", data.angular))
         }
@@ -175,16 +174,19 @@ class manualControlScene: SKScene {
                 buttonDisconnect.activeState = 0
                 buttonManualDrive.activeState = 0
                 current_drive_method = "None"
+                joystick.removeFromParent()
             }
             
             else if buttonManualDrive.contains(location){
                 if current_drive_method == "None" && (connection.connState == .connected ||  connection.connState == .connecting){
                     current_drive_method = "Manual"
                     buttonManualDrive.activeState = 2
+                    addChild(joystick)
                 }
                 else if current_drive_method == "Manual"{
                     current_drive_method = "None"
                     buttonManualDrive.activeState = 1
+                    joystick.removeFromParent()
                 }
             }
     }
