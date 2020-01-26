@@ -174,15 +174,15 @@ class manualControlScene: SKScene {
             if buttonConnect.contains(location) && connection.connState == .initial {
                 connection.connect()
                 if connection.connState == .connected ||  connection.connState == .connecting{
-                    buttonConnect.activeState = 0
-                    buttonDisconnect.activeState = 2
+                    buttonConnect.activeState = 2
+                    buttonDisconnect.activeState = 1
                     buttonManualDrive.activeState = 1
                 }
                     
             }
             else if buttonDisconnect.contains(location) && (connection.connState == .connected ||  connection.connState == .connecting){
                 connection.disconnect()
-                buttonConnect.activeState = 2
+                buttonConnect.activeState = 1
                 buttonDisconnect.activeState = 0
                 buttonManualDrive.activeState = 0
                 current_drive_method = "None"
@@ -200,7 +200,6 @@ class manualControlScene: SKScene {
                     current_drive_method = "None"
                     buttonManualDrive.activeState = 1
                     deactivateJoystick()
-//                    joystick.removeFromParent()
                 }
             }
     }

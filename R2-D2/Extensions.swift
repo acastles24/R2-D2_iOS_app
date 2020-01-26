@@ -41,7 +41,7 @@ extension SKColor {
 //    Credit to Aviel Gross:
 //    https://stackoverflow.com/questions/11598043/get-slightly-lighter-and-darker-color-from-uicolor
     var lighterColor: SKColor {
-        return lighterColor(removeSaturation: 0.5, resultAlpha: -1)
+        return lighterColor(removeSaturation: 0.75, resultAlpha: -1)
     }
 
     func lighterColor(removeSaturation val: CGFloat, resultAlpha alpha: CGFloat) -> UIColor {
