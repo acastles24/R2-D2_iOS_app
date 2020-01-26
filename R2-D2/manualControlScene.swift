@@ -19,7 +19,7 @@ class manualControlScene: SKScene {
     var buttonManualDrive: GeneralButton! = nil
     var buttonManualDriveLabel: SKLabelNode! = nil
     var current_drive_method: String = "None"
-    let joystick_rad: CGFloat = 75
+    let joystick_rad: CGFloat = ScreenSize.width * 0.2
     struct mqttTopics{
         let manualDriveTopic = "rpi/manualControl"
         let driveModeTopic = "rpi/driveMode"
@@ -35,8 +35,8 @@ class manualControlScene: SKScene {
     }
         
     lazy var joystick: AnalogJoystick = {
-        let js = AnalogJoystick(diameter: CGFloat(joystick_rad * 2), colors: (UIColor.white, UIColor.blue))
-        js.position = CGPoint(x: 0, y: ScreenSize.height * -0.5 + js.radius + 45)
+        let js = AnalogJoystick(diameter: CGFloat(joystick_rad * 2), colors: (UIColor.darkGray, UIColor.gray))
+        js.position = CGPoint(x: 0, y: ScreenSize.height * -0.45 + js.radius + 45)
       js.zPosition = NodesZPosition.joystick.rawValue
       return js
     }()
@@ -47,6 +47,7 @@ class manualControlScene: SKScene {
         createButtonDisconnect()
         createButtonManualDrive()
         setupJoystick(joystick: joystick)
+        addChild(joystick)
     }
     
     func setupNodes() {
@@ -62,13 +63,16 @@ class manualControlScene: SKScene {
             self.connection.publish(self.topics.manualDriveTopic, withString: "velX = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.x, mag: self.joystick_rad)) + " velY = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.y, mag: self.joystick_rad)) + " ang = " + String(format: "%.2f", data.angular))
         }
     }
-    
-    class GeneralButton:SKSpriteNode{
+
+    class GeneralButton:SKShapeNode{
         var activeColorInit:SKColor?
         var highlightColorInit:SKColor?
         convenience init(activeColor: SKColor, position: CGPoint){
-            self.init(texture: nil, color: SKColor.darkGray, size: CGSize(width: 100, height: 44))
+            self.init(rectOf: CGSize(width: 150, height: 60), cornerRadius: 5)
             self.position = position
+            self.lineWidth = 4
+            self.strokeColor = UIColor.black
+            self.fillColor = UIColor.gray
             activeColorInit = activeColor
             highlightColorInit = activeColor.lighterColor
         }
@@ -83,17 +87,17 @@ class manualControlScene: SKScene {
         var activeState: Int? {
             willSet(newValue){
                 if newValue == 2{
-                    self.color = activeColorInit!
+                    self.fillColor = activeColorInit!
                     becomeActive()
 //                    !
                 }
                 else if newValue == 1{
-                    self.color = highlightColorInit!
+                    self.fillColor = highlightColorInit!
                     becomeHighlighted()
 //                    !
                 }
                 else{
-                    self.color = SKColor.darkGray
+                    self.fillColor = SKColor.darkGray
                 }
             }
         }
@@ -127,23 +131,23 @@ class manualControlScene: SKScene {
     }
     
     func createButtonConnect() {
-        buttonConnect = GeneralButton(activeColor: SKColor.green, position: CGPoint(x: self.frame.midX, y: self.frame.midY))
+        buttonConnect = GeneralButton(activeColor: SKColor.green, position: CGPoint(x: self.frame.midX+100, y: self.frame.midY+200))
         buttonConnect.activeState = 1
-        buttonConnectLabel = ButtonLabel(text: "Connect", fontSize: 30, position: CGPoint(x: buttonConnect.frame.midX, y: buttonConnect.frame.midY), fontColor: SKColor.black, fontNamed: "Chalkduster")
+        buttonConnectLabel = ButtonLabel(text: "Connect", fontSize: 20, position: CGPoint(x: buttonConnect.frame.midX, y: buttonConnect.frame.midY), fontColor: SKColor.black, fontNamed: "Copperplate")
         addChild(buttonConnect)
         addChild(buttonConnectLabel)
     }
     
     func createButtonDisconnect() {
-        buttonDisconnect = GeneralButton(activeColor: SKColor.red, position: CGPoint(x: self.frame.midX-100, y: self.frame.midY-100))
-        buttonDisconnectLabel = ButtonLabel(text: "Disconnect", fontSize: 30, position: CGPoint(x: buttonDisconnect.frame.midX, y: buttonDisconnect.frame.midY), fontColor: SKColor.black, fontNamed: "Chalkduster")
+        buttonDisconnect = GeneralButton(activeColor: SKColor.red, position: CGPoint(x: self.frame.midX-100, y: self.frame.midY+200))
+        buttonDisconnectLabel = ButtonLabel(text: "Disconnect", fontSize: 20, position: CGPoint(x: buttonDisconnect.frame.midX, y: buttonDisconnect.frame.midY), fontColor: SKColor.black, fontNamed: "Copperplate")
         addChild(buttonDisconnect)
         addChild(buttonDisconnectLabel)
     }
     
     func createButtonManualDrive() {
-        buttonManualDrive = DriveButton(activeColor: SKColor.orange, position: CGPoint(x: self.frame.midX+100, y: self.frame.midY+100), client: connection, topic: topics.driveModeTopic, message: current_drive_method)
-        buttonManualDriveLabel = ButtonLabel(text: "Manual Drive", fontSize: 30, position: CGPoint(x: buttonManualDrive.frame.midX, y: buttonManualDrive.frame.midY), fontColor: SKColor.black, fontNamed: "Chalkduster")
+        buttonManualDrive = DriveButton(activeColor: SKColor.blue, position: CGPoint(x: self.frame.midX, y: self.frame.midY+50), client: connection, topic: topics.driveModeTopic, message: current_drive_method)
+        buttonManualDriveLabel = ButtonLabel(text: "Manual Drive", fontSize: 20, position: CGPoint(x: buttonManualDrive.frame.midX, y: buttonManualDrive.frame.midY), fontColor: SKColor.black, fontNamed: "Copperplate")
         addChild(buttonManualDrive)
         addChild(buttonManualDriveLabel)
     }
@@ -152,15 +156,23 @@ class manualControlScene: SKScene {
         return vel/mag
     }
     
+    func deactivateJoystick(){
+        joystick.substrate.color = SKColor.darkGray
+        joystick.stick.color = SKColor.gray
+    }
+    
+    func activateJoystick(){
+        joystick.substrate.color = SKColor.white
+        joystick.stick.color = SKColor.blue
+    }
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let location = touch.location(in: self)
 
             if buttonConnect.contains(location) && connection.connState == .initial {
-//                todo: wait?
                 connection.connect()
-//                state is .connecting for some reason
                 if connection.connState == .connected ||  connection.connState == .connecting{
                     buttonConnect.activeState = 0
                     buttonDisconnect.activeState = 2
@@ -174,19 +186,21 @@ class manualControlScene: SKScene {
                 buttonDisconnect.activeState = 0
                 buttonManualDrive.activeState = 0
                 current_drive_method = "None"
-                joystick.removeFromParent()
+                deactivateJoystick()
             }
             
             else if buttonManualDrive.contains(location){
                 if current_drive_method == "None" && (connection.connState == .connected ||  connection.connState == .connecting){
                     current_drive_method = "Manual"
                     buttonManualDrive.activeState = 2
-                    addChild(joystick)
+                    activateJoystick()
+                    
                 }
                 else if current_drive_method == "Manual"{
                     current_drive_method = "None"
                     buttonManualDrive.activeState = 1
-                    joystick.removeFromParent()
+                    deactivateJoystick()
+//                    joystick.removeFromParent()
                 }
             }
     }
