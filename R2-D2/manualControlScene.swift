@@ -146,7 +146,7 @@ class manualControlScene: SKScene {
     }
     
     func createButtonManualDrive() {
-        buttonManualDrive = DriveButton(activeColor: SKColor.blue, position: CGPoint(x: self.frame.midX, y: self.frame.midY+50), client: connection, topic: topics.driveModeTopic, message: current_drive_method)
+        buttonManualDrive = DriveButton(activeColor: SKColor.init(red: 0, green: 106/255, blue: 255/255, alpha: 1), position: CGPoint(x: self.frame.midX, y: self.frame.midY+50), client: connection, topic: topics.driveModeTopic, message: current_drive_method)
         buttonManualDriveLabel = ButtonLabel(text: "Manual Drive", fontSize: 20, position: CGPoint(x: buttonManualDrive.frame.midX, y: buttonManualDrive.frame.midY), fontColor: SKColor.black, fontNamed: "Copperplate")
         addChild(buttonManualDrive)
         addChild(buttonManualDriveLabel)
@@ -163,7 +163,7 @@ class manualControlScene: SKScene {
     
     func activateJoystick(){
         joystick.substrate.color = SKColor.white
-        joystick.stick.color = SKColor.blue
+        joystick.stick.color = SKColor.init(red: 0, green: 106/255, blue: 255/255, alpha: 1)
     }
     
     
