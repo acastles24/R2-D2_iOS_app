@@ -12,6 +12,10 @@
 
 <img src="/Images/icon_screenshot.jpg" width="400"> <img src="/Images/launch_screen.png" width="400">
 
+### Main Screen Operation
+
+<img src="/Images/main_screen_gif.gif" width="400">
+
 ## Code
 
 ### Establishes and Terminates IP Connection to Raspberry Pi
