@@ -8,9 +8,9 @@
 * Swift
 * MQTT
 
-### Launch Screen and Main Screen
+### Icon | Launch Screen
 
-![Launch Screen](/Images/launch_screen.png?raw=true "Main Screen") ![Main Screen](/Images/main_screen_small.png?raw=true "Main Screen")
+<img src="/Images/icon_screenshot.jpg" width="400"> <img src="/Images/launch_screen.png" width="400">
 
 ## Code
 
