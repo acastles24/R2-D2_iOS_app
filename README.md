@@ -8,14 +8,14 @@
 * Swift
 * MQTT
 
-App Launch Screen
+### Launch Screen and Main Screen
 
 ![Launch Screen](/Images/launch_screen.png?raw=true "Main Screen") ![Main Screen](/Images/main_screen_small.png?raw=true "Main Screen")
 
 ## Code
 
 ### Establishes and Terminates IP Connection to Raspberry Pi
-The user can connect and disconnect to the Raspberry Pi via MQTT protocol. The button and joystick visualization changes depending on connection state.
+The user can connect and disconnect to the Raspberry Pi via MQTT protocol. The state of the buttons and joystick change depending on connection progress.
 
 ```swift
 override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -53,5 +53,20 @@ override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
                     deactivateJoystick()
                 }
             }
+    }
+```
+
+### Joystick Control of Robot
+
+The on screen joystick creates a tracking handler to send the current velocity and magnitude when it is being moved, as a stop handler to send a zero velocity message when the stick is released.
+
+```swift
+func setupJoystick(joystick: AnalogJoystick) {
+        joystick.trackingHandler = {[unowned self] data in
+            self.connection.publish(self.topics.manualDriveTopic, withString: "velX = " +  String(format: "%.2f",self.normalizeJoystickVelocity(vel: data.velocity.x, mag: self.joystick_rad)) + " velY = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.y, mag: self.joystick_rad)) + " ang = " + String(format: "%.2f", data.angular))
+        }
+        joystick.stopHandler = {[unowned self] data in
+            self.connection.publish(self.topics.manualDriveTopic, withString: "velX = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.x, mag: self.joystick_rad)) + " velY = " + String(format: "%.2f", self.normalizeJoystickVelocity(vel: data.velocity.y, mag: self.joystick_rad)) + " ang = " + String(format: "%.2f", data.angular))
+        }
     }
 ```
